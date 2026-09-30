@@ -1,0 +1,113 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  background: #f4f7fb;
+}
+
+.hobbies-section {
+  min-height: 100vh;
+  padding: 60px 20px;
+  text-align: center;
+  background: #f4f7fb;
+  font-family: Arial, sans-serif;
+}
+
+.hobbies-wrapper {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.section-label {
+  display: inline-block;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: #6366f1;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.hobbies-header h1 {
+  font-size: 40px;
+  color: #222;
+  margin: 0 0 10px 0;
+}
+
+.hobbies-header h1 span {
+  color: #6366f1;
+}
+
+.hobbies-header p {
+  color: #666;
+  margin-bottom: 40px;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.hobbies-grid {
+  max-width: 1000px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 25px;
+}
+
+.hobby-card {
+  padding: 30px;
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 5px 15px #ddd;
+  transition: 0.3s;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.hobby-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 25px #ccc;
+}
+
+.hobby-icon {
+  font-size: 45px;
+  margin-bottom: 15px;
+}
+
+.hobby-content h2 {
+  color: #333;
+  margin-top: 0;
+  margin-bottom: 10px;
+  font-size: 22px;
+}
+
+.hobby-content p {
+  color: #666;
+  line-height: 1.5;
+  margin: 0;
+  font-size: 15px;
+}
+
+.card-arrow {
+  margin-top: 20px;
+  font-size: 20px;
+  color: #6366f1;
+  font-weight: bold;
+  align-self: flex-end;
+  transition: transform 0.2s ease;
+}
+
+.hobby-card:hover .card-arrow {
+  transform: translateX(6px);
+}
+
+@media (max-width: 600px) {
+  .hobbies-grid {
+    grid-template-columns: 1fr;
+  }
+}

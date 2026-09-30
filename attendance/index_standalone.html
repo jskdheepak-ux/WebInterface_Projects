@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>College Attendance Tracker (Standalone)</title>
+  <!-- React and ReactDOM from CDN -->
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <style>
+    * { 
+      margin: 0; 
+      padding: 0; 
+      box-sizing: border-box; 
+    } 
+    body { 
+      font-family: Arial, sans-serif; 
+      background: #f4f6fb; 
+    } 
+    .app { 
+      min-height: 100vh; 
+      padding-bottom: 40px; 
+    } 
+    header { 
+      text-align: center; 
+      padding: 30px 20px; 
+      background: linear-gradient(135deg, #4f46e5, #7c3aed); 
+      color: white; 
+      margin-bottom: 30px; 
+    } 
+    header h1 { 
+      font-size: 32px; 
+      margin-bottom: 8px; 
+    } 
+    header p { 
+      font-size: 16px; 
+      opacity: 0.9; 
+    } 
+    .summary { 
+      width: 90%; 
+      max-width: 1000px; 
+      margin: 0 auto 30px; 
+      display: flex; 
+      justify-content: center; 
+      gap: 20px; 
+      flex-wrap: wrap; 
+    } 
+    .summary-card { 
+      width: 220px; 
+      padding: 25px; 
+      border-radius: 15px; 
+      text-align: center; 
+      background: white; 
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08); 
+      transition: 0.3s; 
+    } 
+    .summary-card:hover { 
+      transform: translateY(-5px); 
+    } 
+    .summary-card h3 { 
+      color: #555; 
+      font-size: 17px; 
+    } 
+    .summary-card p { 
+      font-size: 38px; 
+      font-weight: bold; 
+      margin-top: 10px; 
+    } 
+    .total { 
+      border-top: 5px solid #4f46e5; 
+    } 
+    .total p { 
+      color: #4f46e5; 
+    } 
+    .present-card { 
+      border-top: 5px solid #16a34a; 
+    } 
+    .present-card p { 
+      color: #16a34a; 
+    } 
+    .absent-card { 
+      border-top: 5px solid #dc2626; 
+    } 
+    .absent-card p { 
+      color: #dc2626; 
+    } 
+    .attendance-container { 
+      width: 90%; 
+      max-width: 1000px; 
+      margin: auto; 
+      background: white; 
+      border-radius: 20px; 
+      padding: 25px; 
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08); 
+    } 
+    .attendance-header { 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center; 
+      margin-bottom: 25px; 
+    } 
+    .attendance-header h2 { 
+      color: #333; 
+    } 
+    .student-list { 
+      display: flex; 
+      flex-direction: column; 
+      gap: 12px; 
+    } 
+    .student-row { 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center; 
+      padding: 15px 20px; 
+      background: #f8fafc; 
+      border-radius: 12px; 
+      transition: 0.3s; 
+    } 
+    .student-row:hover { 
+      background: #eef2ff; 
+      transform: translateX(5px); 
+    } 
+    .student-info { 
+      display: flex; 
+      align-items: center; 
+      gap: 15px; 
+    } 
+    .roll-number { 
+      width: 40px; 
+      height: 40px; 
+      display: flex; 
+      justify-content: center; 
+      align-items: center; 
+      border-radius: 50%; 
+      background: #4f46e5; 
+      color: white; 
+      font-weight: bold; 
+    } 
+    .student-info h3 { 
+      font-size: 17px; 
+      color: #333; 
+    } 
+    .attendance-buttons { 
+      display: flex; 
+      gap: 10px; 
+    } 
+    .attendance-buttons button { 
+      border: none; 
+      padding: 10px 16px; 
+      border-radius: 8px; 
+      cursor: pointer; 
+      font-size: 14px; 
+      font-weight: 500; 
+      transition: 0.3s; 
+    } 
+    .present-btn { 
+      background: #dcfce7; 
+      color: #15803d; 
+    } 
+    .present-btn:hover, 
+    .present-btn.selected { 
+      background: #16a34a; 
+      color: white; 
+    } 
+    .absent-btn { 
+      background: #fee2e2; 
+      color: #dc2626; 
+    } 
+    .absent-btn:hover, 
+    .absent-btn.selected { 
+      background: #dc2626; 
+      color: white; 
+    } 
+    .reset-btn { 
+      border: none; 
+      background: #64748b; 
+      color: white; 
+      padding: 10px 18px; 
+      border-radius: 8px; 
+      cursor: pointer; 
+      font-size: 14px; 
+      transition: 0.3s; 
+    } 
+    .reset-btn:hover { 
+      background: #475569; 
+      transform: scale(1.05); 
+    } 
+    @media (max-width: 700px) { 
+      header h1 { 
+        font-size: 25px; 
+      } 
+      .summary-card { 
+        width: 100%; 
+      } 
+      .attendance-header { 
+        flex-direction: column; 
+        gap: 15px; 
+      } 
+      .student-row { 
+        flex-direction: column; 
+        gap: 15px; 
+        align-items: flex-start; 
+      } 
+      .attendance-buttons { 
+        width: 100%; 
+      } 
+      .attendance-buttons button { 
+        flex: 1; 
+      } 
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState } = React;
+
+    function AttendanceTracker() { 
+      const [students, setStudents] = useState([ 
+        { id: 1, name: "Anu", status: "" }, 
+        { id: 2, name: "Charu ", status: "" }, 
+        { id: 3, name: "Deepa", status: "" }, 
+        { id: 4, name: "Deepika", status: "" }, 
+        { id: 5, name: "Enosh", status: "" }, 
+        { id: 6, name: "Harini", status: "" }, 
+        { id: 7, name: "John", status: "" }, 
+        { id: 8, name: "karthi", status: "" }, 
+        { id: 9, name: "Madhu", status: "" }, 
+        { id: 10, name: "Nila", status: "" }, 
+        { id: 11, name: "Nadhini", status: "" }, 
+        { id: 12, name: "Nivi", status: "" }, 
+        { id: 13, name: "Pradeep", status: "" }, 
+        { id: 14, name: "Rose", status: "" }, 
+        { id: 15, name: "Raj", status: "" }, 
+        { id: 16, name: "Sam", status: "" }, 
+        { id: 17, name: "sanu", status: "" }, 
+        { id: 18, name: "Santhosh", status: "" }, 
+        { id: 19, name: "Shalini", status: "" }, 
+        { id: 20, name: "Uma", status: "" }, 
+      ]); 
+
+      const markAttendance = (id, status) => { 
+        setStudents( 
+          students.map((student) => 
+            student.id === id 
+              ? { ...student, status: status } 
+              : student 
+          ) 
+        ); 
+      }; 
+
+      const presentCount = students.filter( 
+        (student) => student.status === "Present" 
+      ).length; 
+
+      const absentCount = students.filter( 
+        (student) => student.status === "Absent" 
+      ).length; 
+
+      const resetAttendance = () => { 
+        setStudents( 
+          students.map((student) => ({ 
+            ...student, 
+            status: "", 
+          })) 
+        ); 
+      }; 
+
+      return ( 
+        <div className="app"> 
+          <header> 
+            <h1>🎓 College Attendance Tracker</h1> 
+            <p>Mark attendance for your students</p> 
+          </header> 
+
+          <div className="summary"> 
+            <div className="summary-card total"> 
+              <h3>Total Students</h3> 
+              <p>{students.length}</p> 
+            </div> 
+            <div className="summary-card present-card"> 
+              <h3>Present</h3> 
+              <p>{presentCount}</p> 
+            </div> 
+            <div className="summary-card absent-card"> 
+              <h3>Absent</h3> 
+              <p>{absentCount}</p> 
+            </div> 
+          </div> 
+
+          <div className="attendance-container"> 
+            <div className="attendance-header"> 
+              <h2>Student Attendance</h2> 
+              <button 
+                className="reset-btn" 
+                onClick={resetAttendance} 
+              > 
+                ↻ Reset 
+              </button> 
+            </div> 
+            <div className="student-list"> 
+              {students.map((student) => ( 
+                <div className="student-row" key={student.id}> 
+                  <div className="student-info"> 
+                    <span className="roll-number"> 
+                      {student.id} 
+                    </span> 
+                    <h3>{student.name}</h3> 
+                  </div> 
+
+                  <div className="attendance-buttons"> 
+                    <button 
+                      className={ 
+                        student.status === "Present" 
+                          ? "present-btn selected" 
+                          : "present-btn" 
+                      } 
+                      onClick={() => 
+                        markAttendance(student.id, "Present") 
+                      } 
+                    > 
+                      ✓ Present 
+                    </button> 
+                    <button 
+                      className={ 
+                        student.status === "Absent" 
+                          ? "absent-btn selected" 
+                          : "absent-btn" 
+                      } 
+                      onClick={() => 
+                        markAttendance(student.id, "Absent") 
+                      } 
+                    > 
+                      ✕ Absent 
+                    </button> 
+                  </div> 
+                </div> 
+              ))} 
+            </div> 
+          </div> 
+        </div> 
+      ); 
+    } 
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<AttendanceTracker />);
+  </script>
+</body>
+</html>

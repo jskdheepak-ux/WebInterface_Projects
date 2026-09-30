@@ -1,0 +1,1181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Dashboard - Royal Engineering College</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700;800&display=swap" rel="stylesheet">
+  
+  <!-- React and Babel Standalone for Instant Browser Execution -->
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <style>
+    /* Design System & Global Styles */
+    :root {
+      --purple-950: #1a052e;
+      --purple-900: #2b0b47;
+      --purple-800: #4a1575;
+      --purple-700: #6b21a8;
+      --purple-600: #8b5cf6;
+      --purple-500: #a855f7;
+      --purple-400: #c084fc;
+      --purple-300: #d8b4fe;
+      --purple-100: #f3e8ff;
+
+      --pink-900: #831843;
+      --pink-800: #9d174d;
+      --pink-700: #be185d;
+      --pink-600: #db2777;
+      --pink-500: #ec4899;
+      --pink-400: #f472b6;
+      --pink-300: #f9a8d4;
+      --pink-100: #fce7f3;
+
+      --white: #ffffff;
+      --gray-50: #f8fafc;
+      --gray-100: #f1f5f9;
+      --gray-200: #e2e8f0;
+      --gray-300: #cbd5e1;
+      --gray-600: #475569;
+      --gray-700: #334155;
+      --gray-800: #1e293b;
+      --gray-900: #0f172a;
+
+      --glass-card-bg: rgba(255, 255, 255, 0.95);
+      --glass-card-border: rgba(255, 255, 255, 0.6);
+      --glass-card-shadow: 0 15px 35px rgba(43, 11, 71, 0.15), 0 5px 15px rgba(219, 39, 119, 0.08);
+
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --radius-xl: 26px;
+
+      --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --font-heading: 'Space Grotesk', var(--font-sans);
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      /* Purple and Pink Gradient Background */
+      background: linear-gradient(135deg, #2b0b47 0%, #4a1575 25%, #7e22ce 50%, #db2777 80%, #f472b6 100%);
+      background-attachment: fixed;
+      color: var(--gray-800);
+      min-height: 100vh;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    ul, ol { list-style: none; }
+    button { font-family: inherit; cursor: pointer; border: none; background: none; }
+
+    .app-layout {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* Task 2: Header */
+    .dashboard-header {
+      background: rgba(43, 11, 71, 0.85);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 2px solid rgba(244, 114, 182, 0.4);
+      padding: 1.1rem 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+    }
+
+    .header-container {
+      max-width: 1300px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .college-branding {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .college-logo-icon {
+      width: 50px;
+      height: 50px;
+      background: linear-gradient(135deg, #c084fc, #ec4899);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 15px rgba(236, 72, 153, 0.4);
+      border: 2px solid rgba(255, 255, 255, 0.6);
+    }
+
+    .college-initials {
+      font-family: var(--font-heading);
+      font-weight: 800;
+      font-size: 1.3rem;
+      color: #ffffff;
+      letter-spacing: -0.04em;
+    }
+
+    .college-name {
+      font-family: var(--font-heading);
+      font-size: 1.45rem;
+      font-weight: 800;
+      color: #ffffff;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+    }
+
+    .college-tagline {
+      font-size: 0.78rem;
+      color: var(--pink-300);
+      font-weight: 500;
+    }
+
+    .header-title-badge {
+      text-align: right;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 4px;
+    }
+
+    .badge-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(236, 72, 153, 0.2);
+      border: 1px solid rgba(244, 114, 182, 0.4);
+      padding: 4px 12px;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #fce7f3;
+    }
+
+    .live-indicator {
+      width: 8px;
+      height: 8px;
+      background-color: #10b981;
+      border-radius: 50%;
+      box-shadow: 0 0 8px #10b981;
+    }
+
+    .dashboard-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #ffffff;
+      letter-spacing: -0.01em;
+    }
+
+    /* Main Dashboard Content */
+    .dashboard-content {
+      max-width: 1300px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+      flex: 1;
+    }
+
+    .hero-banner {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: var(--radius-xl);
+      padding: 2.2rem 2.5rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-banner::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 6px;
+      background: linear-gradient(90deg, #7e22ce, #ec4899, #f472b6);
+    }
+
+    .hero-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--pink-100);
+      color: var(--pink-800);
+      padding: 5px 14px;
+      border-radius: 9999px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      margin-bottom: 0.8rem;
+    }
+
+    .hero-heading {
+      font-family: var(--font-heading);
+      font-size: 2.1rem;
+      font-weight: 800;
+      color: var(--gray-900);
+      letter-spacing: -0.03em;
+      margin-bottom: 0.6rem;
+      line-height: 1.25;
+    }
+
+    .gradient-text {
+      background: linear-gradient(135deg, #7e22ce 0%, #db2777 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-subtext {
+      color: var(--gray-600);
+      font-size: 1rem;
+      max-width: 820px;
+      margin-bottom: 1.5rem;
+    }
+
+    .metrics-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 1rem;
+    }
+
+    .metric-badge {
+      background: linear-gradient(135deg, #faf5ff 0%, #fdf2f8 100%);
+      border: 1px solid var(--pink-300);
+      border-radius: var(--radius-md);
+      padding: 0.9rem 1.1rem;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .metric-val {
+      font-family: var(--font-heading);
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: #7e22ce;
+      line-height: 1.1;
+    }
+
+    .metric-lbl {
+      font-size: 0.78rem;
+      color: var(--gray-600);
+      font-weight: 600;
+      margin-top: 4px;
+    }
+
+    /* Controls Bar */
+    .portal-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .student-filter-tabs {
+      display: flex;
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(10px);
+      padding: 5px;
+      border-radius: 9999px;
+      gap: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.4);
+    }
+
+    .tab-btn {
+      padding: 8px 18px;
+      border-radius: 9999px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: #ffffff;
+      transition: all 0.2s ease;
+    }
+
+    .tab-btn:hover { background: rgba(255, 255, 255, 0.25); }
+    .tab-btn.tab-active {
+      background: #ffffff;
+      color: #7e22ce;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .simulator-toggle {
+      background: rgba(255, 255, 255, 0.95);
+      color: #be185d;
+      font-weight: 700;
+      font-size: 0.88rem;
+      padding: 9px 18px;
+      border-radius: 9999px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+      transition: all 0.2s ease;
+    }
+
+    .simulator-toggle.sim-active {
+      background: #db2777;
+      color: #ffffff;
+    }
+
+    /* Simulator Panel */
+    .simulator-panel {
+      background: rgba(255, 255, 255, 0.96);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      border: 2px dashed #ec4899;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    .sim-intro h4 {
+      font-size: 1.1rem;
+      color: #7e22ce;
+      margin-bottom: 4px;
+    }
+
+    .sim-intro p {
+      font-size: 0.85rem;
+      color: var(--gray-600);
+      margin-bottom: 1.2rem;
+    }
+
+    .sim-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.2rem;
+    }
+
+    .sim-card {
+      background: #faf5ff;
+      border: 1px solid var(--purple-200);
+      border-radius: var(--radius-md);
+      padding: 1.2rem;
+    }
+
+    .sim-student-name {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      font-size: 1rem;
+      color: var(--gray-900);
+    }
+
+    .sim-reg-tag {
+      background: var(--purple-100);
+      color: #7e22ce;
+      font-size: 0.75rem;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-weight: 700;
+    }
+
+    .sim-slider-group {
+      margin-bottom: 0.9rem;
+    }
+
+    .sim-slider-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.82rem;
+      margin-bottom: 6px;
+      color: var(--gray-700);
+    }
+
+    .sim-tag {
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 6px;
+    }
+
+    .tag-pass { background: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; }
+    .tag-fail { background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; }
+
+    .sim-slider-group input[type="range"] {
+      width: 100%;
+      accent-color: #db2777;
+      cursor: pointer;
+    }
+
+    /* Cards Grid */
+    .students-cards-container {
+      display: grid;
+      gap: 2rem;
+    }
+
+    .students-cards-container.multi-view {
+      grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+    }
+
+    .students-cards-container.single-view {
+      max-width: 720px;
+      margin: 0 auto;
+      grid-template-columns: 1fr;
+    }
+
+    .student-card {
+      background: var(--glass-card-bg);
+      border-radius: var(--radius-xl);
+      padding: 2rem;
+      box-shadow: var(--glass-card-shadow);
+      border: 1px solid var(--glass-card-border);
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .student-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 25px 50px rgba(43, 11, 71, 0.22), 0 10px 20px rgba(219, 39, 119, 0.12);
+    }
+
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.2rem;
+    }
+
+    .jersey-tag {
+      background: linear-gradient(135deg, #7e22ce, #db2777);
+      color: #ffffff;
+      font-weight: 800;
+      font-size: 0.9rem;
+      padding: 4px 12px;
+      border-radius: 9999px;
+      box-shadow: 0 3px 10px rgba(219, 39, 119, 0.3);
+    }
+
+    .dept-tag {
+      background: var(--purple-100);
+      color: #6b21a8;
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 9999px;
+    }
+
+    .student-header-info {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1.25rem;
+      border-bottom: 1px solid var(--gray-200);
+    }
+
+    .photo-container {
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .student-photo {
+      width: 88px;
+      height: 88px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid #ec4899;
+      box-shadow: 0 6px 16px rgba(236, 72, 153, 0.3);
+    }
+
+    .verified-badge {
+      position: absolute;
+      bottom: 2px;
+      right: 2px;
+      background: #10b981;
+      color: #ffffff;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 800;
+      border: 2px solid #ffffff;
+    }
+
+    .name-and-title { flex: 1; }
+    .badge-subtitle { font-size: 0.85rem; color: var(--pink-700); font-weight: 600; margin-bottom: 4px; }
+    .student-quote { font-size: 0.8rem; color: var(--gray-600); font-style: italic; line-height: 1.4; }
+
+    /* Task 3: Details List */
+    .student-details-list {
+      background: #faf5ff;
+      border: 1px solid var(--purple-100);
+      border-radius: var(--radius-md);
+      padding: 1.1rem;
+      margin-bottom: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .detail-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.35rem 0.5rem;
+      border-radius: 6px;
+    }
+
+    .detail-item:hover { background: rgba(255, 255, 255, 0.8); }
+    .detail-label { font-weight: 600; color: var(--gray-700); font-size: 0.92rem; }
+    .detail-value { font-weight: 600; color: var(--gray-900); font-size: 0.95rem; }
+    .highlight-reg {
+      font-family: monospace;
+      font-weight: 700;
+      color: #6b21a8;
+      background: #f3e8ff;
+      padding: 2px 8px;
+      border-radius: 6px;
+    }
+
+    .attendance-bar-container { margin-bottom: 1.5rem; }
+    .attendance-bar-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--gray-700);
+      margin-bottom: 6px;
+    }
+    .attendance-track {
+      width: 100%;
+      height: 9px;
+      background: #e2e8f0;
+      border-radius: 9999px;
+      overflow: hidden;
+    }
+    .attendance-fill { height: 100%; border-radius: 9999px; }
+    .fill-green { background: linear-gradient(90deg, #10b981, #059669); }
+    .fill-red { background: linear-gradient(90deg, #f87171, #ef4444); }
+
+    /* Task 6: Status Container */
+    .status-container { margin-bottom: 1.5rem; }
+    .status-heading {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--gray-800);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.75rem;
+    }
+
+    .status-box {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.85rem 1.1rem;
+      border-radius: var(--radius-md);
+      margin-bottom: 0.65rem;
+      border: 1px solid transparent;
+    }
+
+    .status-label-group { display: flex; flex-direction: column; gap: 2px; }
+    .status-title { font-size: 0.78rem; font-weight: 600; color: var(--gray-600); text-transform: uppercase; }
+    .status-badge { font-size: 0.95rem; font-weight: 800; }
+    .status-icon-mark { font-size: 1.25rem; }
+
+    .status-box.eligible { background: #ecfdf5; border-color: #a7f3d0; color: #065f46; }
+    .status-box.eligible .status-badge { color: #047857; }
+
+    .status-box.not-eligible { background: #fef2f2; border-color: #fecaca; color: #991b1b; }
+    .status-box.not-eligible .status-badge { color: #b91c1c; }
+
+    .status-box.eligible-placement { background: #faf5ff; border-color: #d8b4fe; color: #581c87; }
+    .status-box.eligible-placement .status-badge { color: #7e22ce; }
+
+    .status-box.warning-placement { background: #fffbeb; border-color: #fde68a; color: #92400e; }
+    .status-box.warning-placement .status-badge { color: #b45309; }
+
+    /* Task 4 & 5: Subject List */
+    .card-subject-wrapper { margin-top: auto; }
+    .subject-list-container {
+      background: linear-gradient(135deg, #faf5ff 0%, #fdf2f8 100%);
+      border: 1px solid var(--pink-200);
+      border-radius: var(--radius-md);
+      padding: 1.25rem;
+    }
+    .subject-header { margin-bottom: 0.9rem; }
+    .subject-title { font-size: 0.95rem; font-weight: 700; color: #7e22ce; }
+
+    .academic-meta-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.6rem;
+      margin-bottom: 1.1rem;
+    }
+
+    .meta-card {
+      background: #ffffff;
+      border: 1px solid var(--purple-100);
+      border-radius: 8px;
+      padding: 0.5rem 0.6rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .meta-label { font-size: 0.68rem; font-weight: 600; color: var(--gray-600); }
+    .meta-value {
+      font-family: var(--font-heading);
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: #db2777;
+      margin-top: 2px;
+    }
+
+    .list-title {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--gray-700);
+      margin-bottom: 0.6rem;
+      text-transform: uppercase;
+    }
+
+    .subjects-ul { display: flex; flex-direction: column; gap: 0.45rem; }
+    .subject-li {
+      background: #ffffff;
+      border: 1px solid var(--purple-100);
+      border-radius: 8px;
+      padding: 0.5rem 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .subject-badge {
+      background: linear-gradient(135deg, #7e22ce, #ec4899);
+      color: #ffffff;
+      width: 22px;
+      height: 22px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.72rem;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+
+    .subject-name { font-weight: 700; color: var(--gray-900); font-size: 0.9rem; flex: 1; }
+    .subject-code {
+      font-size: 0.72rem;
+      color: var(--purple-600);
+      font-weight: 600;
+      background: var(--purple-100);
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    /* Footer */
+    .dashboard-footer {
+      background: rgba(27, 4, 46, 0.92);
+      backdrop-filter: blur(10px);
+      border-top: 1px solid rgba(244, 114, 182, 0.3);
+      color: #f3e8ff;
+      padding: 1.5rem 2rem;
+      margin-top: auto;
+    }
+
+    .footer-container {
+      max-width: 1300px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .footer-brand { font-weight: 700; font-size: 0.95rem; color: #ffffff; }
+    .footer-desc { font-size: 0.78rem; color: var(--pink-300); }
+    .footer-right { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+    .footer-pill {
+      background: rgba(236, 72, 153, 0.15);
+      border: 1px solid rgba(244, 114, 182, 0.3);
+      color: var(--pink-200);
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 9999px;
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <!-- React Components Babel Script -->
+  <script type="text/babel">
+    const { useState } = React;
+
+    // ==========================================
+    // Task 2: Header Component
+    // ==========================================
+    function Header() {
+      return (
+        <header className="dashboard-header">
+          <div className="header-container">
+            <div className="college-branding">
+              <div className="college-logo-icon">
+                <span className="college-initials">REC</span>
+              </div>
+              <div className="college-info">
+                <h1 className="college-name">Royal Engineering College</h1>
+                <p className="college-tagline">Department of Computer Science & Engineering | Academic Year 2025–2026</p>
+              </div>
+            </div>
+
+            <div className="header-title-badge">
+              <div className="badge-pill">
+                <span className="live-indicator"></span>
+                Live Academic Portal
+              </div>
+              <h2 className="dashboard-title">Student Dashboard</h2>
+            </div>
+          </div>
+        </header>
+      );
+    }
+
+    // ==========================================
+    // Task 4 & Task 5: SubjectList Component
+    // ==========================================
+    function SubjectList({ semester = "VI", year = "III" }) {
+      // Task 4: Store subjects in an array
+      const subjects = ["React", "Java", "Python", "SQL", "DBMS"];
+
+      return (
+        <div className="subject-list-container">
+          <div className="subject-header">
+            <h4 className="subject-title">Registered Subjects & Enrolment</h4>
+          </div>
+
+          {/* Task 5: JSX Expressions */}
+          <div className="academic-meta-grid">
+            <div className="meta-card">
+              <span className="meta-label">Current Semester :</span>
+              <span className="meta-value">{semester}</span>
+            </div>
+            <div className="meta-card">
+              <span className="meta-label">Current Year :</span>
+              <span className="meta-value">{year}</span>
+            </div>
+            <div className="meta-card">
+              <span className="meta-label">Total Subjects :</span>
+              <span className="meta-value">{subjects.length}</span>
+            </div>
+          </div>
+
+          {/* Task 4: Display inside unordered list */}
+          <div className="subject-list-section">
+            <h5 className="list-title">Course Curriculum:</h5>
+            <ul className="subjects-ul">
+              {subjects.map((subject, index) => (
+                <li key={index} className="subject-li">
+                  <span className="subject-badge">{index + 1}</span>
+                  <span className="subject-name">{subject}</span>
+                  <span className="subject-code">CS-30{index + 1}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      );
+    }
+
+    // ==========================================
+    // Task 3, 6, 7: StudentCard Component
+    // ==========================================
+    function StudentCard({
+      name,
+      regNo,
+      department,
+      year,
+      semester = "VI",
+      cgpa,
+      attendance,
+      photo,
+      badgeTitle,
+      jerseyNo,
+      quote
+    }) {
+      // Task 6: Conditional Rendering Logic
+      const isAttendanceEligible = attendance >= 75;
+      const isPlacementEligible = cgpa >= 8;
+
+      // Task 7: Inline Styles
+      const studentNameInlineStyle = {
+        color: 'blue',
+        fontWeight: '700',
+        fontSize: '1.5rem',
+        margin: '0 0 4px 0'
+      };
+
+      const cgpaInlineStyle = {
+        color: 'green',
+        fontWeight: '700',
+        fontSize: '1.2rem'
+      };
+
+      const attendanceInlineStyle = {
+        color: 'orange',
+        fontWeight: '700',
+        fontSize: '1.2rem'
+      };
+
+      return (
+        <div className="student-card">
+          <div className="card-top">
+            <span className="jersey-tag">#{jerseyNo || '10'}</span>
+            <span className="dept-tag">{department}</span>
+          </div>
+
+          <div className="student-header-info">
+            <div className="photo-container">
+              <img
+                src={photo}
+                alt={name}
+                className="student-photo"
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=400&auto=format&fit=crop&q=80";
+                }}
+              />
+              <div className="verified-badge">✓</div>
+            </div>
+
+            <div className="name-and-title">
+              {/* Task 7: Inline style for Student Name (Blue) */}
+              <h3 style={studentNameInlineStyle} className="student-name">
+                Name : {name}
+              </h3>
+              {badgeTitle && <p className="badge-subtitle">{badgeTitle}</p>}
+              {quote && <p className="student-quote">"{quote}"</p>}
+            </div>
+          </div>
+
+          {/* Task 3: Details List */}
+          <div className="student-details-list">
+            <div className="detail-item">
+              <span className="detail-label">Register No :</span>
+              <span className="detail-value highlight-reg">{regNo}</span>
+            </div>
+
+            <div className="detail-item">
+              <span className="detail-label">Department :</span>
+              <span className="detail-value">{department}</span>
+            </div>
+
+            <div className="detail-item">
+              <span className="detail-label">Year :</span>
+              <span className="detail-value">{year}</span>
+            </div>
+
+            <div className="detail-item">
+              <span className="detail-label">CGPA :</span>
+              {/* Task 7: Inline style for CGPA (Green) */}
+              <span style={cgpaInlineStyle} className="detail-value">
+                {cgpa}
+              </span>
+            </div>
+
+            <div className="detail-item">
+              <span className="detail-label">Attendance :</span>
+              {/* Task 7: Inline style for Attendance (Orange) */}
+              <span style={attendanceInlineStyle} className="detail-value">
+                {attendance}%
+              </span>
+            </div>
+          </div>
+
+          {/* Visual Attendance Bar */}
+          <div className="attendance-bar-container">
+            <div className="attendance-bar-label">
+              <span>Attendance Ratio</span>
+              <span>{attendance}%</span>
+            </div>
+            <div className="attendance-track">
+              <div
+                className={`attendance-fill ${isAttendanceEligible ? 'fill-green' : 'fill-red'}`}
+                style={{ width: `${Math.min(attendance, 100)}%` }}
+              ></div>
+            </div>
+          </div>
+
+          {/* Task 6: Conditional Rendering Status */}
+          <div className="status-container">
+            <h4 className="status-heading">Academic & Placement Eligibility</h4>
+
+            {/* Attendance Status */}
+            <div className={`status-box ${isAttendanceEligible ? 'eligible' : 'not-eligible'}`}>
+              <div className="status-label-group">
+                <span className="status-title">Attendance Status :</span>
+                <span className="status-badge">
+                  {isAttendanceEligible ? "Eligible for Semester Exam" : "Not Eligible"}
+                </span>
+              </div>
+              <span className="status-icon-mark">{isAttendanceEligible ? "✅" : "⚠️"}</span>
+            </div>
+
+            {/* Placement Status */}
+            <div className={`status-box ${isPlacementEligible ? 'eligible-placement' : 'warning-placement'}`}>
+              <div className="status-label-group">
+                <span className="status-title">Placement Status :</span>
+                <span className="status-badge">
+                  {isPlacementEligible ? "Eligible" : "Need Improvement"}
+                </span>
+              </div>
+              <span className="status-icon-mark">{isPlacementEligible ? "🎯" : "📈"}</span>
+            </div>
+          </div>
+
+          {/* Task 4 & 5: Embedded SubjectList */}
+          <div className="card-subject-wrapper">
+            <SubjectList semester={semester} year={year} />
+          </div>
+        </div>
+      );
+    }
+
+    // ==========================================
+    // Task 1: Footer Component
+    // ==========================================
+    function Footer() {
+      return (
+        <footer className="dashboard-footer">
+          <div className="footer-container">
+            <div className="footer-left">
+              <p className="footer-brand">Royal Engineering College &copy; {new Date().getFullYear()}</p>
+              <p className="footer-desc">Student Information & Academic Performance Management System</p>
+            </div>
+            <div className="footer-right">
+              <span className="footer-pill">React 18</span>
+              <span className="footer-pill">Tasks 1–8 Implemented</span>
+            </div>
+          </div>
+        </footer>
+      );
+    }
+
+    // ==========================================
+    // Task 1: Main App Component
+    // ==========================================
+    function App() {
+      const initialStudents = [
+        {
+          id: 1,
+          name: "Lionel Messi",
+          regNo: "REC-1010",
+          department: "CSE (Computer Science & Engineering)",
+          year: "III",
+          semester: "VI",
+          cgpa: 9.85,
+          attendance: 92,
+          jerseyNo: "10",
+          badgeTitle: "University Gold Medalist & AI Scholar",
+          quote: "You have to fight to reach your dream. You have to sacrifice and work hard for it.",
+          photo: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=500&auto=format&fit=crop&q=80"
+        },
+        {
+          id: 2,
+          name: "Cristiano Ronaldo",
+          regNo: "REC-1007",
+          department: "IT (Information Technology)",
+          year: "III",
+          semester: "VI",
+          cgpa: 8.95,
+          attendance: 88,
+          jerseyNo: "07",
+          badgeTitle: "Honor Roll Scholar & Tech Lead",
+          quote: "Talent without working hard is nothing. Consistent discipline creates champions.",
+          photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500&auto=format&fit=crop&q=80"
+        }
+      ];
+
+      const [students, setStudents] = useState(initialStudents);
+      const [selectedStudent, setSelectedStudent] = useState('all');
+      const [showLiveTester, setShowLiveTester] = useState(false);
+
+      const handleStatChange = (id, field, value) => {
+        setStudents(prev =>
+          prev.map(st => (st.id === id ? { ...st, [field]: parseFloat(value) } : st))
+        );
+      };
+
+      const displayedStudents = selectedStudent === 'all'
+        ? students
+        : students.filter(st => st.id.toString() === selectedStudent);
+
+      return (
+        <div className="app-layout">
+          <Header />
+
+          <main className="dashboard-content">
+            <section className="hero-banner">
+              <div className="hero-tag">
+                <span>✨</span> Academic Excellence & Eligibility Portal
+              </div>
+              <h2 className="hero-heading">
+                Student Performance & Placement <span className="gradient-text">Dashboard</span>
+              </h2>
+              <p className="hero-subtext">
+                Monitor real-time semester examination eligibility, CGPA rankings, curriculum subjects, and campus placement qualifications.
+              </p>
+
+              <div className="metrics-row">
+                <div className="metric-badge">
+                  <span className="metric-val">{students.length}</span>
+                  <span className="metric-lbl">Students Enrolled</span>
+                </div>
+                <div className="metric-badge">
+                  <span className="metric-val">5</span>
+                  <span className="metric-lbl">Core Subjects</span>
+                </div>
+                <div className="metric-badge">
+                  <span className="metric-val">VI</span>
+                  <span className="metric-lbl">Semester</span>
+                </div>
+                <div className="metric-badge">
+                  <span className="metric-val">100%</span>
+                  <span className="metric-lbl">Placement Success</span>
+                </div>
+              </div>
+            </section>
+
+            <div className="portal-controls">
+              <div className="student-filter-tabs">
+                <button
+                  className={`tab-btn ${selectedStudent === 'all' ? 'tab-active' : ''}`}
+                  onClick={() => setSelectedStudent('all')}
+                >
+                  👥 All Students ({students.length})
+                </button>
+                <button
+                  className={`tab-btn ${selectedStudent === '1' ? 'tab-active' : ''}`}
+                  onClick={() => setSelectedStudent('1')}
+                >
+                  🪄 Lionel Messi (#10)
+                </button>
+                <button
+                  className={`tab-btn ${selectedStudent === '2' ? 'tab-active' : ''}`}
+                  onClick={() => setSelectedStudent('2')}
+                >
+                  ⚽ Cristiano Ronaldo (#07)
+                </button>
+              </div>
+
+              <button
+                className={`simulator-toggle ${showLiveTester ? 'sim-active' : ''}`}
+                onClick={() => setShowLiveTester(!showLiveTester)}
+              >
+                <span>⚡</span> {showLiveTester ? "Close Live Tester" : "Test Conditional Values"}
+              </button>
+            </div>
+
+            {showLiveTester && (
+              <div className="simulator-panel">
+                <div className="sim-intro">
+                  <h4>🛠️ Real-Time Conditional Rendering Simulator</h4>
+                  <p>Drag the sliders below to test Exam Eligibility (&ge; 75%) and Placement Status (&ge; 8.0 CGPA).</p>
+                </div>
+                <div className="sim-grid">
+                  {students.map(st => (
+                    <div key={st.id} className="sim-card">
+                      <div className="sim-student-name">
+                        <strong>{st.name}</strong>
+                        <span className="sim-reg-tag">{st.regNo}</span>
+                      </div>
+
+                      <div className="sim-slider-group">
+                        <div className="sim-slider-label">
+                          <span>Attendance: <strong>{st.attendance}%</strong></span>
+                          <span className={`sim-tag ${st.attendance >= 75 ? 'tag-pass' : 'tag-fail'}`}>
+                            {st.attendance >= 75 ? 'Exam Eligible' : 'Not Eligible'}
+                          </span>
+                        </div>
+                        <input
+                          type="range"
+                          min="50"
+                          max="100"
+                          value={st.attendance}
+                          onChange={(e) => handleStatChange(st.id, 'attendance', e.target.value)}
+                        />
+                      </div>
+
+                      <div className="sim-slider-group">
+                        <div className="sim-slider-label">
+                          <span>CGPA: <strong>{st.cgpa}</strong></span>
+                          <span className={`sim-tag ${st.cgpa >= 8.0 ? 'tag-pass' : 'tag-fail'}`}>
+                            {st.cgpa >= 8.0 ? 'Eligible' : 'Need Improvement'}
+                          </span>
+                        </div>
+                        <input
+                          type="range"
+                          min="5.0"
+                          max="10.0"
+                          step="0.1"
+                          value={st.cgpa}
+                          onChange={(e) => handleStatChange(st.id, 'cgpa', e.target.value)}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <div className={`students-cards-container ${displayedStudents.length === 1 ? 'single-view' : 'multi-view'}`}>
+              {displayedStudents.map((student) => (
+                <StudentCard
+                  key={student.id}
+                  name={student.name}
+                  regNo={student.regNo}
+                  department={student.department}
+                  year={student.year}
+                  semester={student.semester}
+                  cgpa={student.cgpa}
+                  attendance={student.attendance}
+                  photo={student.photo}
+                  badgeTitle={student.badgeTitle}
+                  jerseyNo={student.jerseyNo}
+                  quote={student.quote}
+                />
+              ))}
+            </div>
+          </main>
+
+          <Footer />
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
+</body>
+</html>
